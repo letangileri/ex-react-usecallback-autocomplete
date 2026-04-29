@@ -6,14 +6,22 @@ function App() {
   const [suggestions, setSuggestions] = useState([]);
   console.log(suggestions);
 
-  useEffect(() => {
+  const fetchProducts = async (query) => {
     if (query.trim() === "") {
       setSuggestions([]);
       return;
     }
-    fetch(`http://localhost:3333/products?search=${query}`)
-      .then((res) => res.json())
-      .then((data) => setSuggestions(data));
+    try {
+      const res = await fetch(`http://localhost:3333/products?search=${query}`);
+      const data = await res.json();
+      setSuggestions(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts(query);
   }, [query]);
 
   return (
